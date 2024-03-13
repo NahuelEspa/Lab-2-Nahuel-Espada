@@ -1,0 +1,22 @@
+from pydataset import data
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+Banco = data("Datos Bancarios")
+Banco(20)
+
+x_train, x_test, y_train, y_test = train_test_split(Banco.drip ("Datos de banco fraude", axis=1), Banco["Afectados"])
+
+LogReg = LogisticRegression(solver="lbfgs")
+LogReg.fit(x_train, y_train)
+
+LogReg.predict(np.array([[0,0,20,20]]))[0]
+
+LogReg.predict(np.array([[0,0,20,0]]))[0]
+
+LogReg.fit(x_test, y_test)
+
+prediction = (LogReg.predict(x_test) > .5).astype(int)
+np.sum(prediction == y_test) / len(y_test)
